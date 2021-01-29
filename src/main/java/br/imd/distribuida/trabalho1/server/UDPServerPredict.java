@@ -29,7 +29,8 @@ public class UDPServerPredict {
 				
 				try {
 					Predict pred = (Predict) gson.fromJson(is.readObject().toString(), Predict.class);
-					System.out.println("Predict received. Chr: "+pred.getChr()+", pos: "+ pred.getPos()+ ", ref: " + pred.getRef()+", alt: " + pred.getAlt());
+					System.out.println("Token: " + pred.getToken()); 
+					System.out.println("Predict received. Chr: " + pred.getChr()+", pos: "+ pred.getPos()+ ", ref: " + pred.getRef()+", alt: " + pred.getAlt());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
