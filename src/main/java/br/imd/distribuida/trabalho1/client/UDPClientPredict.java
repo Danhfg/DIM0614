@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 
+import br.imd.distribuida.trabalho1.models.Predict;
 import br.imd.distribuida.trabalho1.models.ServerResponse;
 import br.imd.distribuida.trabalho1.models.User;
 
@@ -32,7 +33,7 @@ public class UDPClientPredict {
 				if ("quit".equalsIgnoreCase(message)) {
 					break;
 				}
-				if(message.equals("C")) {
+				if(message.equalsIgnoreCase("C")) {
 					byte[] sendMessage;
 					
 					byte[] receiveMessage = new byte[1024];
@@ -47,9 +48,11 @@ public class UDPClientPredict {
 					String userJson = gson.toJson(user);
 					sendMessage = userJson.getBytes();
 					
+					int portAuth = 7778;
+					
 					DatagramPacket sendPacket = new DatagramPacket(
 							sendMessage, sendMessage.length,
-							inetAddress, 7778);
+							inetAddress, portAuth);
 					clientSocket.send(sendPacket);
 					clientSocket.receive(receivePacket);
 					String serverResponse = new String(receivePacket.getData());
@@ -63,7 +66,7 @@ public class UDPClientPredict {
 						System.out.println("Sucesso: " + sr.getMessage());							
 					}
 				}
-				else if(message.equals("E")) {
+				else if(message.equalsIgnoreCase("E")) {
 					byte[] sendMessage;
 					
 					byte[] receiveMessage = new byte[1024];
@@ -78,9 +81,11 @@ public class UDPClientPredict {
 					String userJson = gson.toJson(user);
 					sendMessage = userJson.getBytes();
 					
+					int portAuth = 7777;
+					
 					DatagramPacket sendPacket = new DatagramPacket(
 							sendMessage, sendMessage.length,
-							inetAddress, 7778);
+							inetAddress, portAuth);
 					clientSocket.send(sendPacket);
 					clientSocket.receive(receivePacket);
 					String serverResponse = new String(receivePacket.getData());
@@ -93,10 +98,61 @@ public class UDPClientPredict {
 					}else {
 						System.out.println("Sucesso!");
 						this.token = sr.getMessage();
-						
 						break;
 					}
 				}
+			}
+			
+			while(true) {
+				System.out.print("Deseja se [S]olicitar novas predições ou [V]isualizar suas predições: ");
+				message = scanner.nextLine();
+				if ("quit".equalsIgnoreCase(message)) {
+					break;
+				}
+				else if("S".equalsIgnoreCase(message)) {
+					byte[] sendMessage;
+					
+					byte[] receiveMessage = new byte[1024];
+					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
+
+					System.out.print("Chromossomo: ");
+					String chr = scanner.nextLine();
+					System.out.print("Posição: ");
+					String pos = scanner.nextLine();
+					System.out.print("Nucleotídeo Referência: ");
+					String ref= scanner.nextLine();
+					System.out.print("Nucleotídeo Alternante: ");
+					String alt= scanner.nextLine();
+					System.out.print("Paciente: ");
+					String pat= scanner.nextLine();
+					
+					Predict pred = new Predict(chr, Integer.valueOf(pos), ref.charAt(0), alt.charAt(0), pat, token);
+					
+					String predJson = gson.toJson(pred);
+					sendMessage = predJson.getBytes();
+					
+					int portPred = 8888;
+					
+					DatagramPacket sendPacket = new DatagramPacket(
+							sendMessage, sendMessage.length,
+							inetAddress, portPred);
+					clientSocket.send(sendPacket);
+					/*clientSocket.receive(receivePacket);
+					String serverResponse = new String(receivePacket.getData());
+					serverResponse = serverResponse.replaceAll("\u0000.*", "");
+					
+					ServerResponse sr = gson.fromJson(serverResponse, ServerResponse.class);
+					
+					if(sr.getError()) {
+						System.out.println("Erro: " + sr.getMessage());
+					}else {
+						System.out.println("Sucesso: " + sr.getMessage());							
+					}*/
+				}
+				else if("V".equalsIgnoreCase(message)) {
+					
+				}
+				
 			}
 
 			clientSocket.close();

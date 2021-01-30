@@ -2,7 +2,7 @@ package br.imd.distribuida.trabalho1.models;
 
 public class Predict {
 	
-	private Character chr;
+	private String chr;
 	
 	private Integer pos;
 	
@@ -10,13 +10,15 @@ public class Predict {
 	
 	private Character alt;
 	
+	private String patient;
+	
 	private String token;
 
-	public Character getChr() {
+	public String getChr() {
 		return chr;
 	}
 
-	public void setChr(Character chr) {
+	public void setChr(String chr) {
 		this.chr = chr;
 	}
 
@@ -49,6 +51,23 @@ public class Predict {
 	}
 
 	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getPatient() {
+		return patient;
+	}
+
+	public void setPatient(String patient) {
+		this.patient = patient;
+	}
+
+	public Predict(String chr, Integer pos, Character ref, Character alt, String patient, String token) {
+		this.chr = chr;
+		this.pos = pos;
+		this.ref = ref;
+		this.alt = alt;
+		this.patient = patient;
 		this.token = token;
 	}
 

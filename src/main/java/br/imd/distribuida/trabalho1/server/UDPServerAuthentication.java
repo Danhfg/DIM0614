@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
 import com.google.gson.Gson;
 
 import br.imd.distribuida.trabalho1.models.ServerResponse;
@@ -23,12 +21,12 @@ public class UDPServerAuthentication {
 	private Algorithm algorithm = Algorithm.HMAC256("secret");
 
 	public UDPServerAuthentication() {
-
-		System.out.println("UDP Server Prediction Started");
+		int port = 7777;
 		
 		try {
-			int port = 7778;
 			DatagramSocket serverSocket = new DatagramSocket(port);
+
+			System.out.println("UDP Server Authentication Started");
 			while(true) {
 				byte[] receiveMessage = new byte[1024];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
@@ -105,17 +103,9 @@ public class UDPServerAuthentication {
 						if(bool) {
 							System.out.println("Retornando Token");
 							String token = JWT.create()
-							        .withIssuer(user.getUser())
+							        .withClaim("user", user.getUser())
 							        .sign(algorithm);
 							System.out.println(token);
-							
-							JWTVerifier verifier = JWT.require(algorithm)
-							        .withIssuer("danielhenriquefg@gmail.com")
-							        .build();
-							DecodedJWT jwt = JWT.decode(token);
-							
-							System.out.println(jwt.getSubject());
-
 
 							byte[] sendMessage;
 							
@@ -163,6 +153,6 @@ public class UDPServerAuthentication {
 	}
 
 	public static void main(String[] args) { 
-			new UDPServerAuthentication();    
-		}
+		new UDPServerAuthentication();    
+	}
 }
