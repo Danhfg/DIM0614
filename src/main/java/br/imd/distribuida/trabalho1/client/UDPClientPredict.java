@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import br.imd.distribuida.trabalho1.models.Predict;
 import br.imd.distribuida.trabalho1.models.ServerResponse;
+import br.imd.distribuida.trabalho1.models.Token;
 import br.imd.distribuida.trabalho1.models.User;
 
 public class UDPClientPredict {
@@ -131,13 +132,13 @@ public class UDPClientPredict {
 					String predJson = gson.toJson(pred);
 					sendMessage = predJson.getBytes();
 					
-					int portPred = 8888;
+					int portDB= 8888;
 					
 					DatagramPacket sendPacket = new DatagramPacket(
 							sendMessage, sendMessage.length,
-							inetAddress, portPred);
+							inetAddress, portDB);
 					clientSocket.send(sendPacket);
-					/*clientSocket.receive(receivePacket);
+					clientSocket.receive(receivePacket);
 					String serverResponse = new String(receivePacket.getData());
 					serverResponse = serverResponse.replaceAll("\u0000.*", "");
 					
@@ -147,9 +148,35 @@ public class UDPClientPredict {
 						System.out.println("Erro: " + sr.getMessage());
 					}else {
 						System.out.println("Sucesso: " + sr.getMessage());							
-					}*/
+					}
 				}
 				else if("V".equalsIgnoreCase(message)) {
+
+					byte[] sendMessage;
+					
+					byte[] receiveMessage = new byte[1024];
+					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
+					
+					//Token tokenRequest = new Token(token);
+					sendMessage = token.getBytes();
+					
+					int portPred = 9999;
+					
+					DatagramPacket sendPacket = new DatagramPacket(
+							sendMessage, sendMessage.length,
+							inetAddress, portPred);
+					clientSocket.send(sendPacket);
+					clientSocket.receive(receivePacket);
+					String serverResponse = new String(receivePacket.getData());
+					serverResponse = serverResponse.replaceAll("\u0000.*", "");
+					
+					ServerResponse sr = gson.fromJson(serverResponse, ServerResponse.class);
+					
+					if(sr.getError()) {
+						System.out.println("Erro: " + sr.getMessage());
+					}else {
+						System.out.println("Sucesso: " + sr.getMessage());							
+					}
 					
 				}
 				

@@ -2,9 +2,12 @@ package br.imd.distribuida.trabalho1.server;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.time.LocalDate;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
@@ -13,6 +16,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 
 import br.imd.distribuida.trabalho1.models.Predict;
+import br.imd.distribuida.trabalho1.models.ServerResponse;
 
 public class UDPServerDbNSFP {
 	
@@ -23,7 +27,7 @@ public class UDPServerDbNSFP {
 		try {
 			DatagramSocket serverSocket = new DatagramSocket(port);
 
-			System.out.println("UDP Server Prediction Started");
+			System.out.println("UDP Server DBNSFP Started");
 			while(true) {
 				byte[] receiveMessage = new byte[1024];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
@@ -106,18 +110,53 @@ public class UDPServerDbNSFP {
 					Runtime.getRuntime().exec("java -jar /home/joel/Downloads/snpEff/SnpSift.jar dbnsfp -v -db /home/joel/Documentos/dbNSFP4.1a.txt.gz "+e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".vcf"+ " > data/"+e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".annotated.vcf");
 
 					ProcessBuilder pb = new ProcessBuilder("java","-jar","/home/joel/Downloads/snpEff/SnpSift.jar",
-							"dbnsfp","-v","-db","/home/joel/Documentos/dbNSFP4.1a.txt.gz",e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".vcf");
+							"dbnsfp","-v","-db","/home/joel/Documentos/dbNSFP4.1a.txt.gz", "data/"+e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".vcf");
 					pb.redirectOutput(new File("data/", e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".annotated.vcf"));
-					pb.redirectError(new File("data/", "out.log"));
+					pb.redirectError(new File("data/", e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+"out.log"));
 					Process p = pb.start();
+
+					byte[] sendMessage;
 					
-					p.onExit();
-					System.out.println("AAAAAAAAAAa");
+		            InetAddress addressClient = receivePacket.getAddress();
+		            int portClient = receivePacket.getPort();
+		            
+		            ServerResponse sr = new ServerResponse(false, "Solicitação de predição recebida!");
+					String srJson = gson.toJson(sr);
+					sendMessage = srJson.getBytes();
+					
+					DatagramPacket sendPacket = new DatagramPacket(
+							sendMessage, sendMessage.length,
+							addressClient, portClient);
+					serverSocket.send(sendPacket);
 
-					ReversedLinesFileReader object = null;
-
-					object = new ReversedLinesFileReader(new File("data/"+e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".annotated.vcf"));
-					System.out.println("Line - " + object.readLine());
+					CompletableFuture<Process> cfp = p.onExit();
+					//cfp.get();
+					cfp.thenAccept(
+						ph_ -> 
+							{
+								ReversedLinesFileReader object = null;
+								try {
+									object = new ReversedLinesFileReader(new File("data/", e+pred.getChr()+pred.getPatient()+pred.getPos().toString()+pred.getAlt()+".annotated.vcf"));
+									String result = object.readLine();
+									//System.out.println(pred.getPatient()+"	" + result);
+									
+									File myObj = new File("data/predictions/"+e+".tsv");
+									if (myObj.createNewFile()) {
+										myObj.getName();
+									}
+									FileWriter myWriter = new FileWriter("data/predictions/"+e+".tsv");
+									myWriter.write(pred.getPatient()+"	" + result);
+									myWriter.close();
+								} catch (IOException e1) {
+									e1.printStackTrace();
+							 	}finally{
+									try {
+										object.close();
+									} catch (IOException e1) {
+										e1.printStackTrace();
+								  }
+							 	}
+							});
 					
 				} catch (Exception e) {
 					serverSocket.close();
