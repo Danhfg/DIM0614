@@ -19,7 +19,7 @@ public class ServerResponse {
 	}
 
 	public void setMessage(String message) {
-		message = message;
+		this.message = message;
 	}
 
 	public ServerResponse(Boolean error, String message) {

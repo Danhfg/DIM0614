@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 
 import br.imd.distribuida.trabalho1.models.Predict;
 import br.imd.distribuida.trabalho1.models.ServerResponse;
-import br.imd.distribuida.trabalho1.models.Token;
 import br.imd.distribuida.trabalho1.models.User;
 
 public class UDPClientPredict {
@@ -49,7 +48,7 @@ public class UDPClientPredict {
 					String userJson = gson.toJson(user);
 					sendMessage = userJson.getBytes();
 					
-					int portAuth = 7778;
+					int portAuth = 7777;
 					
 					DatagramPacket sendPacket = new DatagramPacket(
 							sendMessage, sendMessage.length,
@@ -64,7 +63,8 @@ public class UDPClientPredict {
 					if(sr.getError()) {
 						System.out.println("Erro: " + sr.getMessage());
 					}else {
-						System.out.println("Sucesso: " + sr.getMessage());							
+						System.out.println("Sucesso: " + sr.getMessage());
+						break;							
 					}
 				}
 				else if(message.equalsIgnoreCase("E")) {
@@ -154,7 +154,7 @@ public class UDPClientPredict {
 
 					byte[] sendMessage;
 					
-					byte[] receiveMessage = new byte[1024];
+					byte[] receiveMessage = new byte[10240];
 					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 					
 					//Token tokenRequest = new Token(token);

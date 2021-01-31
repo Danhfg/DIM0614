@@ -18,7 +18,7 @@ public class UDPServerAuthentication {
 
 	private Gson gson = new Gson();
 	
-	private Algorithm algorithm = Algorithm.HMAC256("secret");
+	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 
 	public UDPServerAuthentication() {
 		int port = 7777;
@@ -104,6 +104,7 @@ public class UDPServerAuthentication {
 							System.out.println("Retornando Token");
 							String token = JWT.create()
 							        .withClaim("user", user.getUser())
+							        .withIssuer("predictor")
 							        .sign(algorithm);
 							System.out.println(token);
 
