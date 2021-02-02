@@ -41,13 +41,13 @@ public class LoadBalancer {
 		try {
 			inetAddress = InetAddress.getByName("localhost");
 			DatagramSocket clientSocket = new DatagramSocket();
-			clientSocket.setSoTimeout(10);
+			clientSocket.setSoTimeout(500);
 			for (Integer integer : portsServerAuth) {
 				tempAuth = integer;
 				
 				byte[] sendMessage;
 				
-				byte[] receiveMessage = new byte[1024];
+				byte[] receiveMessage = new byte[5120];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 				
 				String ping = "PING";
@@ -92,13 +92,13 @@ public class LoadBalancer {
 		try {
 			inetAddress = InetAddress.getByName("localhost");
 			DatagramSocket clientSocket = new DatagramSocket();
-			clientSocket.setSoTimeout(10);
+			clientSocket.setSoTimeout(500);
 			for (Integer integer : portsServerDB) {
 				tempDB = integer;
 				
 				byte[] sendMessage;
 				
-				byte[] receiveMessage = new byte[1024];
+				byte[] receiveMessage = new byte[5120];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 				
 				String ping = "PING";
@@ -142,13 +142,13 @@ public class LoadBalancer {
 		try {
 			inetAddress = InetAddress.getByName("localhost");
 			DatagramSocket clientSocket = new DatagramSocket();
-			clientSocket.setSoTimeout(10);
+			clientSocket.setSoTimeout(500);
 			for (Integer integer : portsServerPred) {
 				tempPred = integer;
 				
 				byte[] sendMessage;
 				
-				byte[] receiveMessage = new byte[1024];
+				byte[] receiveMessage = new byte[5120];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 				
 				String ping = "PING";
@@ -200,8 +200,7 @@ public class LoadBalancer {
 			InetAddress inetAddress = InetAddress.getByName("localhost");
 
 			while(true) {
-				System.out.println(portsServerAuth);
-				byte[] receiveMessage = new byte[1024];
+				byte[] receiveMessage = new byte[5120];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 				try {
 					serverSocket.receive(receivePacket);
@@ -228,7 +227,7 @@ public class LoadBalancer {
 								serverSocket.send(sendPacket);
 								System.out.println(portsServerAuth.get(0));
 	
-								byte[] receiveMessageAuth = new byte[1024];
+								byte[] receiveMessageAuth = new byte[5120];
 								DatagramPacket receivePacketAuth = new DatagramPacket(receiveMessageAuth, receiveMessageAuth.length);
 								serverSocket.receive(receivePacketAuth);
 								String serverResponse = new String(receivePacketAuth.getData());
@@ -258,9 +257,8 @@ public class LoadBalancer {
 										sendMessageDB, sendMessageDB.length,
 										inetAddress, portsServerDB.get(0));
 								serverSocket.send(sendPacket);
-								System.out.println(portsServerAuth);
 	
-								byte[] receiveMessageDB = new byte[1024];
+								byte[] receiveMessageDB = new byte[5120];
 								DatagramPacket receivePacketDB = new DatagramPacket(receiveMessageDB, receiveMessageDB.length);
 								serverSocket.receive(receivePacketDB);
 								String serverResponse = new String(receivePacketDB.getData());
@@ -289,9 +287,8 @@ public class LoadBalancer {
 								sendMessagePred, sendMessagePred.length,
 								inetAddress, portsServerPred.get(0));
 						serverSocket.send(sendPacket);
-						System.out.println(portsServerAuth);
-
-						byte[] receiveMessagePred = new byte[10240];
+						
+						byte[] receiveMessagePred = new byte[5120];
 						DatagramPacket receivePacketPred = new DatagramPacket(receiveMessagePred, receiveMessagePred.length);
 						serverSocket.receive(receivePacketPred);
 						String serverResponse = new String(receivePacketPred.getData());

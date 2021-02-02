@@ -33,7 +33,7 @@ public class UDPServerPredictions {
 
 			try {
 			while(true) {
-				byte[] receiveMessage = new byte[10240];
+				byte[] receiveMessage = new byte[5120];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 				serverSocket.receive(receivePacket);
 				String message = new String(receivePacket.getData());

@@ -118,6 +118,7 @@ public class UDPClientPredict {
 		Scanner scanner = new Scanner(System.in);
 		try {
 			DatagramSocket clientSocket = new DatagramSocket();
+			clientSocket.setSoTimeout(10000);
 			InetAddress inetAddress = InetAddress.getByName("localhost");
 			String message = "";
 			
@@ -134,7 +135,7 @@ public class UDPClientPredict {
 				if(message.equalsIgnoreCase("C")) {
 					byte[] sendMessage;
 					
-					byte[] receiveMessage = new byte[1024];
+					byte[] receiveMessage = new byte[5120];
 					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 					
 					System.out.print("Login: ");
@@ -165,7 +166,7 @@ public class UDPClientPredict {
 				else if(message.equalsIgnoreCase("E")) {
 					byte[] sendMessage;
 					
-					byte[] receiveMessage = new byte[1024];
+					byte[] receiveMessage = new byte[5120];
 					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 					
 					System.out.print("Login: ");
@@ -204,7 +205,7 @@ public class UDPClientPredict {
 				else if("S".equalsIgnoreCase(message)) {
 					byte[] sendMessage;
 					
-					byte[] receiveMessage = new byte[1024];
+					byte[] receiveMessage = new byte[5120];
 					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 
 					System.out.print("Chromossomo: ");
@@ -243,7 +244,7 @@ public class UDPClientPredict {
 
 					byte[] sendMessage;
 					
-					byte[] receiveMessage = new byte[10240];
+					byte[] receiveMessage = new byte[5120];
 					DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 					
 					String tokenRequest = "Bearer " + token;
@@ -276,7 +277,8 @@ public class UDPClientPredict {
 			scanner.close();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Servidor indisponível tente novamente mais tarde!");
+			//e.printStackTrace();
 		}
 	}
 	

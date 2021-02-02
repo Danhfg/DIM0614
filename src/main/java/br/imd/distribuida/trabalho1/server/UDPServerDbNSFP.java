@@ -34,7 +34,7 @@ public class UDPServerDbNSFP {
 
 			System.out.println("UDP Server DBNSFP Started " + port);
 			while(true) {
-				byte[] receiveMessage = new byte[1024];
+				byte[] receiveMessage = new byte[5120];
 				DatagramPacket receivePacket = new DatagramPacket(receiveMessage, receiveMessage.length);
 				serverSocket.receive(receivePacket);
 
