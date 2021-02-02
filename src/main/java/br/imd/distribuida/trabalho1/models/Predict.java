@@ -1,6 +1,6 @@
 package br.imd.distribuida.trabalho1.models;
 
-public class Predict {
+public class Predict extends Message{
 	
 	private String chr;
 	
@@ -62,7 +62,9 @@ public class Predict {
 		this.patient = patient;
 	}
 
-	public Predict(String chr, Integer pos, Character ref, Character alt, String patient, String token) {
+	public Predict(Integer server, String chr, Integer pos, Character ref, Character alt, String patient,
+			String token) {
+		super(server);
 		this.chr = chr;
 		this.pos = pos;
 		this.ref = ref;

@@ -1,6 +1,6 @@
 package br.imd.distribuida.trabalho1.models;
 
-public class ServerResponse {
+public class ServerResponse{
 	
 	private Boolean error;
 	
@@ -26,5 +26,4 @@ public class ServerResponse {
 		this.error = error;
 		this.message = message;
 	}
-
 }

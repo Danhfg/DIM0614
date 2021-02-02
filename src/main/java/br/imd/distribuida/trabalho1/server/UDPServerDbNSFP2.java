@@ -22,13 +22,13 @@ import com.google.gson.Gson;
 import br.imd.distribuida.trabalho1.models.Predict;
 import br.imd.distribuida.trabalho1.models.ServerResponse;
 
-public class UDPServerDbNSFP {
+public class UDPServerDbNSFP2 {
 	
 	private Gson gson = new Gson();
 	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 
-	public UDPServerDbNSFP() {
-		int port = 8888;
+	public UDPServerDbNSFP2() {
+		int port = 8889;
 		try {
 			DatagramSocket serverSocket = new DatagramSocket(port);
 
@@ -200,6 +200,6 @@ public class UDPServerDbNSFP {
 	}
 
 	public static void main(String[] args) { 
-		new UDPServerDbNSFP();
+		new UDPServerDbNSFP2();
 	}
 }

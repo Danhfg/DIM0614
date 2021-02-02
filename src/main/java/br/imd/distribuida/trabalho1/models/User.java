@@ -1,6 +1,6 @@
 package br.imd.distribuida.trabalho1.models;
 
-public class User{
+public class User extends Message{
 	
 	private Integer type;
 	
@@ -32,8 +32,9 @@ public class User{
 		this.password = password;
 	}
 
-	public User(String user, String password) {
-		super();
+	public User(Integer server, Integer type, String user, String password) {
+		super(server);
+		this.type = type;
 		this.user = user;
 		this.password = password;
 	}

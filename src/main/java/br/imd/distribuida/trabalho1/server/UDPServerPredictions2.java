@@ -16,20 +16,20 @@ import com.google.gson.Gson;
 
 import br.imd.distribuida.trabalho1.models.ServerResponse;
 
-public class UDPServerPredictions {
+public class UDPServerPredictions2 {
 
 	private Gson gson = new Gson();	
 	
 	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 	
-	public UDPServerPredictions() {
+	public UDPServerPredictions2() {
 
-		int port = 9999;
+		int port = 9998;
 		
 		try {
 			DatagramSocket serverSocket = new DatagramSocket(port);
 
-			System.out.println("UDP Predictions Server Started " + port);
+			System.out.println("UDP Predictions Server Started " + port );
 
 			try {
 			while(true) {
@@ -64,7 +64,7 @@ public class UDPServerPredictions {
 					
 					File f = new File("data/predictions/"+e+".tsv");
 					if(!f.exists()) {
-						System.out.println("NOT FOUND");
+						System.out.println("NOTFOUND");
 						
 						byte[] sendMessage;
 						
@@ -114,6 +114,6 @@ public class UDPServerPredictions {
 	}
 
 	public static void main(String[] args) {
-		new UDPServerPredictions();
+		new UDPServerPredictions2();
 	}
 }

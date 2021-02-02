@@ -15,14 +15,14 @@ import com.google.gson.Gson;
 import br.imd.distribuida.trabalho1.models.ServerResponse;
 import br.imd.distribuida.trabalho1.models.User;
 
-public class UDPServerAuthentication {
+public class UDPServerAuthentication2 {
 
 	private Gson gson = new Gson();
 	
 	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 
-	public UDPServerAuthentication() {
-		int port = 7777;
+	public UDPServerAuthentication2() {
+		int port = 7778;
 		
 		try {
 			DatagramSocket serverSocket = new DatagramSocket(port);
@@ -172,6 +172,6 @@ public class UDPServerAuthentication {
 	}
 
 	public static void main(String[] args) { 
-		new UDPServerAuthentication();    
+		new UDPServerAuthentication2();    
 	}
 }
