@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 
+import br.imd.distribuida.trabalho2.models.Predict;
 import br.imd.distribuida.trabalho2.models.ServerResponse;
 import br.imd.distribuida.trabalho2.models.User;
 
@@ -126,12 +127,58 @@ public class TCPClientPredict {
 			
 			while(true) {
 				ByteBuffer myBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-				System.out.print("Deseja se [S]olicitar novas prediÃ§Ãµes ou [V]isualizar suas prediÃ§Ãµes: ");
+				System.out.print("Deseja se [S]olicitar novas predições ou [V]isualizar suas predições: ");
 				message = scanner.nextLine();
 				if ("quit".equalsIgnoreCase(message)) {
 					break;
 				}
 				else if("S".equalsIgnoreCase(message)) {
+					byte[] sendMessage;
+					
+					System.out.print("Chromossomo: ");
+					String chr = scanner.nextLine();
+					System.out.print("Posição: ");
+					String pos = scanner.nextLine();
+					System.out.print("Nucleotídeo Referência: ");
+					String ref= scanner.nextLine();
+					System.out.print("Nucleotídeo Alternante: ");
+					String alt= scanner.nextLine();
+					System.out.print("Paciente: ");
+					String pat= scanner.nextLine();
+					
+					Predict pred = new Predict(2, chr, Integer.valueOf(pos), ref.charAt(0), alt.charAt(0), pat, token);
+					
+					String predJson = gson.toJson(pred);
+					
+					InetSocketAddress myAddress =
+							new InetSocketAddress(hostIP, port);
+					SocketChannel myClient= SocketChannel.open(myAddress);
+					
+					sendMessage = predJson.getBytes();
+					myBuffer.put(sendMessage);
+					myBuffer.flip();
+					int bytesWritten= myClient.write(myBuffer);
+					logger(String
+					.format("Sending Message...: %s\nbytesWritten...: %d",
+							predJson, bytesWritten));
+					ByteBuffer myBufferServer = ByteBuffer.allocate(BUFFER_SIZE);
+					myClient.read(myBufferServer);
+					myClient.close();
+					
+					myBufferServer.flip();
+					
+					String serverResponse = new String(new String(myBufferServer.array()).trim());
+					serverResponse = serverResponse.replaceAll("\u0000.*", "");
+					
+					ServerResponse sr = gson.fromJson(serverResponse, ServerResponse.class);
+					
+					if(sr.getError()) {
+						System.out.println("Erro: " + sr.getMessage());
+					}else {
+						System.out.println("Sucesso: " + sr.getMessage());			
+					}
+					
+					
 				}
 				else if("V".equalsIgnoreCase(message)) {
 					byte[] sendMessage;

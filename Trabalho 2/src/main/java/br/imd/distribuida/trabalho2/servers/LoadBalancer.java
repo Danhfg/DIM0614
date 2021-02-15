@@ -113,9 +113,45 @@ public class LoadBalancer {
 			e.printStackTrace();
 		} 
 	}
+
+	private void updateServersDB() {
+		System.out.println(portsServerDB);
+		InetAddress hostIP;
+		try {
+			for (Integer integer : portsServerDB) {
+				System.out.println(integer);
+				tempDB = integer;
+				hostIP = InetAddress.getLocalHost();
+
+				InetSocketAddress myAddress =
+						new InetSocketAddress(hostIP, integer);
+				SocketChannel myClient= SocketChannel.open(myAddress);
+				byte[] sendMessage;
+				String ping = "PING";
+				sendMessage = ping.getBytes();
+				ByteBuffer serverBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+				serverBuffer.put(sendMessage);
+				serverBuffer.flip();
+				myClient.write(serverBuffer);
+				myClient.read(serverBuffer);
+				myClient.close();
+			}
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ConnectException e ) {
+			removedDB = portsServerDB.remove(portsServerDB.indexOf(tempDB)); 
+			logger("Remove " + removedDB);
+			updateServersDB();
+			//e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 	
 	public LoadBalancer() {
-		System.out.println("ITP Load Balancer Server Started");
+		System.out.println("TCP Load Balancer Server Started");
 		
 		portsServerAuth.add(7777);
 		portsServerAuth.add(7778);
@@ -125,7 +161,6 @@ public class LoadBalancer {
 		portsServerPred.add(9998);
 		try {
 			InetAddress hostIP= InetAddress.getLocalHost();
-			int port = 3333;
 			logger(String.format("Trying to accept connections on %s:%d...",
 			hostIP.getHostAddress(), port));
 			selector = Selector.open();
@@ -150,6 +185,12 @@ public class LoadBalancer {
 					}
 					i.remove();
 				}
+				if(removedAuth != null && portsServerAuth.size() < 2)
+					portsServerAuth.add(0,removedAuth);
+				if(removedDB != null && portsServerDB.size() < 2) 
+					portsServerDB.add(0,removedDB);
+				if(removedPred != null && portsServerPred.size() < 2) 
+					portsServerPred.add(0,removedPred);
 			}	
 			
 		}
@@ -208,6 +249,33 @@ public class LoadBalancer {
 					myClient.close();
 					break;
 				}
+				case 2:{
+					updateServersDB();
+					/*Predict mesP = gson.fromJson(data, Predict.class);
+					String mesJson = gson.toJson(mesP);
+					sendMessageDB = mesJson.getBytes();*/
+
+					InetAddress hostIP= InetAddress.getLocalHost();
+					InetSocketAddress myAddress =
+							new InetSocketAddress(hostIP, portsServerDB.get(0));
+					logger(String.format("Trying to connect to %s:%d...",
+					myAddress.getHostName(), myAddress.getPort()));
+					//myBuffer.put(data.getBytes());
+					myBuffer.flip();
+					SocketChannel serverPred = SocketChannel.open(myAddress);
+					int bytesWritten= serverPred.write(myBuffer);
+					logger(String
+					.format("Sending Message...: %s\nbytesWritten...: %d",
+							data, bytesWritten));
+					ByteBuffer myBufferServer = ByteBuffer.allocate(BUFFER_SIZE);
+					serverPred.read(myBufferServer);
+					serverPred.close();
+					logger(new String(myBufferServer.array()).trim() );
+					myBufferServer.flip();
+					myClient.write(myBufferServer);
+					//myClient.read(myBuffer);
+					myClient.close();
+				}
 			}
 		}
 		else {
@@ -233,7 +301,6 @@ public class LoadBalancer {
 			myClient.write(myBufferServer);
 			//myClient.read(myBuffer);
 			myClient.close();
-			
 		}
 		myClient.close();
 	}
