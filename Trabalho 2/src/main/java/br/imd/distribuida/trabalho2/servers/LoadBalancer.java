@@ -64,6 +64,8 @@ public class LoadBalancer {
 				myClient.read(serverBuffer);
 				myClient.close();
 			}
+			portsServerAuth.add(portsServerAuth.get(0));
+			portsServerAuth.remove(0);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -100,6 +102,8 @@ public class LoadBalancer {
 				myClient.read(serverBuffer);
 				myClient.close();
 			}
+			portsServerPred.add(portsServerPred.get(0));
+			portsServerPred.remove(0);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,6 +140,8 @@ public class LoadBalancer {
 				myClient.read(serverBuffer);
 				myClient.close();
 			}
+			portsServerDB.add(portsServerDB.get(0));
+			portsServerDB.remove(0);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,12 +191,6 @@ public class LoadBalancer {
 					}
 					i.remove();
 				}
-				if(removedAuth != null && portsServerAuth.size() < 2)
-					portsServerAuth.add(0,removedAuth);
-				if(removedDB != null && portsServerDB.size() < 2) 
-					portsServerDB.add(0,removedDB);
-				if(removedPred != null && portsServerPred.size() < 2) 
-					portsServerPred.add(0,removedPred);
 			}	
 			
 		}
@@ -303,6 +303,13 @@ public class LoadBalancer {
 			myClient.close();
 		}
 		myClient.close();
+
+		if(removedAuth != null && portsServerAuth.size() < 2)
+			portsServerAuth.add(0,removedAuth);
+		if(removedDB != null && portsServerDB.size() < 2) 
+			portsServerDB.add(0,removedDB);
+		if(removedPred != null && portsServerPred.size() < 2) 
+			portsServerPred.add(0,removedPred);
 	}
 	
 	public static void logger(String msg) {

@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import br.imd.distribuida.trabalho2.models.ServerResponse;
 
 
-public class TCPServerPredict {
+public class TCPServerPredict2 {
 	private static final int BUFFER_SIZE = 1024;
 	
 	private static Selector selector = null;
@@ -36,11 +36,11 @@ public class TCPServerPredict {
 	
 	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 
-	public TCPServerPredict() {
+	public TCPServerPredict2() {
 		logger("Starting MySelectorClientExample...");
 		try {
 			InetAddress hostIP= InetAddress.getLocalHost();
-			int port = 9998;
+			int port = 9999;
 			logger(String.format("Trying to accept connections on %s:%d...",
 			hostIP.getHostAddress(), port));
 			selector = Selector.open();
@@ -254,7 +254,7 @@ public class TCPServerPredict {
 
 
 	public static void main(String[] args) {
-		new TCPServerPredict();
+		new TCPServerPredict2();
 
 	}
 

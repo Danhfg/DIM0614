@@ -32,7 +32,7 @@ import br.imd.distribuida.trabalho2.models.Predict;
 import br.imd.distribuida.trabalho2.models.ServerResponse;
 
 
-public class TCPServerDbNSFP {
+public class TCPServerDbNSFP2 {
 	private static final int BUFFER_SIZE = 1024;
 	
 	private static Selector selector = null;
@@ -41,11 +41,11 @@ public class TCPServerDbNSFP {
 	
 	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 
-	public TCPServerDbNSFP() {
+	public TCPServerDbNSFP2() {
 		logger("Starting MySelectorClientExample...");
 		try {
 			InetAddress hostIP= InetAddress.getLocalHost();
-			int port = 8889;
+			int port = 8888;
 			logger(String.format("Trying to accept connections on %s:%d...",
 			hostIP.getHostAddress(), port));
 			selector = Selector.open();
@@ -245,7 +245,7 @@ public class TCPServerDbNSFP {
 	}
 
 	public static void main(String[] args) {
-		new TCPServerDbNSFP();
+		new TCPServerDbNSFP2();
 
 	}
 

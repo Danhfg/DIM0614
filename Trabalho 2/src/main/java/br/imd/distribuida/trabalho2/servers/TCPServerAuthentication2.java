@@ -25,7 +25,7 @@ import br.imd.distribuida.trabalho2.models.ServerResponse;
 import br.imd.distribuida.trabalho2.models.User;
 
 
-public class TCPServerAuthentication {
+public class TCPServerAuthentication2 {
 	
 	private static final int BUFFER_SIZE = 1024;
 	
@@ -35,11 +35,11 @@ public class TCPServerAuthentication {
 
 	private Algorithm algorithm = Algorithm.HMAC256("AOsD89f&*Fujalo()*");
 
-	public TCPServerAuthentication() {
+	public TCPServerAuthentication2() {
 		logger("Starting Authentication Server...");
 		try {
 			InetAddress hostIP= InetAddress.getLocalHost();
-			int port = 7777;
+			int port = 7778;
 			logger(String.format("Trying to accept connections on %s:%d...",
 			hostIP.getHostAddress(), port));
 			selector = Selector.open();
@@ -203,7 +203,7 @@ public class TCPServerAuthentication {
 	}
 
 	public static void main(String[] args) {
-		new TCPServerAuthentication();
+		new TCPServerAuthentication2();
 
 	}
 
