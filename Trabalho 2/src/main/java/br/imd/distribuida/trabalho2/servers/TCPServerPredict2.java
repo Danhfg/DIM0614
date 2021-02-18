@@ -136,7 +136,7 @@ public class TCPServerPredict2 {
 					String returnString = "";
 					for (String string : lines) {
 						String[] var = string.split("	");
-						returnString = "Paciente "+ var[0]+ ", posição "+ var[2] + ", mutação " + var[5] + ", resultado: "+ proceesPrediction(var[8]) + "\n";
+						returnString += "Paciente "+ var[0]+ ", posição "+ var[2] + ", mutação " + var[5] + ", resultado: "+ proceesPrediction(var[8]) + "\n";
 					}
 
 					byte[] sendMessage;
